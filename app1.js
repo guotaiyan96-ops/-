@@ -3,10 +3,10 @@
    ========================================================= */
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const PAL=[
- {m:'#1F6F6B',r:'#7FC4BC'},{m:'#C0442C',r:'#E89B88'},
- {m:'#C0932B',r:'#E6C87E'},{m:'#3D4D8A',r:'#93A0D2'},
- {m:'#7A8450',r:'#BCC994'},{m:'#8A4A68',r:'#C996B2'},
- {m:'#4E7E9C',r:'#9CC0D5'},{m:'#B5703D',r:'#E0AF8A'}];
+ {m:'#DCBC7E',r:'#8F7647'},{m:'#4FC9C0',r:'#2E857F'},
+ {m:'#E57C63',r:'#964D3E'},{m:'#82A6EE',r:'#4E6799'},
+ {m:'#AACC76',r:'#65793F'},{m:'#D292CD',r:'#81537F'},
+ {m:'#6CC6E2',r:'#3E788C'},{m:'#E2A566',r:'#8F6338'}];
 const state={rows:null,cols:[],map:{},customers:null,mode:'km',k:null,kBest:null,kmCache:{},
   groups:null,shown:60,sort:{key:'M',dir:-1},legendOff:{}};
 
@@ -36,7 +36,7 @@ function parseCSV(text){
   const headers=clean[0].map(h=>(''+h).trim());
   return {headers,data:clean.slice(1).map(r=>Object.fromEntries(headers.map((h,i)=>[h,r[i]??'']))) ,delim};
 }
-function toCSV(rows){return '﻿'+rows.map(r=>r.map(v=>{v=v==null?'':''+v;return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')).join('\r\n')}
+function toCSV(rows){return '\uFEFF'+rows.map(r=>r.map(v=>{v=v==null?'':''+v;return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',')).join('\r\n')}
 
 /* ---------- 示例数据 ---------- */
 function genSample(){
@@ -296,3 +296,4 @@ const STRATEGY={
  '000':'<b>低成本触达：</b>清仓福利与节日普发，控制单客营销成本，等待自然回流。'};
 function comboName(rHi,fHi,mHi){return SEG_NAME[(rHi?1:0)+''+(fHi?1:0)+(mHi?1:0)]}
 function comboKey(rHi,fHi,mHi){return (rHi?1:0)+''+(fHi?1:0)+(mHi?1:0)}
+
