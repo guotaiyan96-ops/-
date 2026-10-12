@@ -50,15 +50,15 @@ function renderDonut(){
   }).join('');
   $('#donut').innerHTML=svgEl(460,250)+
     `<g transform="translate(10,0)">${segs}
-      <text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="26" font-weight="700" fill="#1B2420"
+      <text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="26" font-weight="700" fill="#ECE6D8"
         font-family="Noto Serif SC,serif">${fmtInt(tot)}</text>
-      <text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="11" fill="#8A918A" letter-spacing="2">客户总数</text>
+      <text x="${cx}" y="${cy+16}" text-anchor="middle" font-size="11" fill="#6E7890" letter-spacing="2">客户总数</text>
     </g>
-    <g transform="translate(250,30)" font-size="12.5" fill="#4A554F">
+    <g transform="translate(250,30)" font-size="12.5" fill="#98A1B3">
       ${gs.map((g,i)=>`<g transform="translate(0,${i*27})">
         <rect width="10" height="10" rx="2" y="1" fill="${g.color}"/>
         <text x="18" y="10">营收 ${(100*g.revenue/revTot).toFixed(1)}%</text>
-        <text x="185" y="10" text-anchor="end" fill="#8A918A">人数 ${(100*g.size/tot).toFixed(1)}%</text>
+        <text x="185" y="10" text-anchor="end" fill="#6E7890">人数 ${(100*g.size/tot).toFixed(1)}%</text>
       </g>`).join('')}
     </g></svg>`;
   $('#donut-legend').innerHTML=gs.map(g=>
@@ -77,18 +77,18 @@ function renderScatter(){
   let grid='';
   for(let i=0;i<=4;i++){
     const x=xMin+(xMax-xMin)*i/4,px=X(x);
-    grid+=`<line x1="${px}" y1="${T}" x2="${px}" y2="${H-B}" stroke="#EDE7D9"/>
-      <text x="${px}" y="${H-B+18}" text-anchor="middle" font-size="10.5" fill="#8A918A">${Math.round(x)}天</text>`;
+    grid+=`<line x1="${px}" y1="${T}" x2="${px}" y2="${H-B}" stroke="rgba(255,255,255,.09)"/>
+      <text x="${px}" y="${H-B+18}" text-anchor="middle" font-size="10.5" fill="#6E7890">${Math.round(x)}天</text>`;
     const lv=yMin+(yMax-yMin)*i/4,py=Y(Math.pow(10,lv));
-    grid+=`<line x1="${L}" y1="${py}" x2="${W-R}" y2="${py}" stroke="#F1EDE2"/>
-      <text x="${L-8}" y="${py+4}" text-anchor="end" font-size="10.5" fill="#8A918A">¥${Math.pow(10,lv)>=1e4?(Math.pow(10,lv)/1e4).toFixed(0)+'万':Math.round(Math.pow(10,lv))}</text>`;
+    grid+=`<line x1="${L}" y1="${py}" x2="${W-R}" y2="${py}" stroke="rgba(255,255,255,.055)"/>
+      <text x="${L-8}" y="${py+4}" text-anchor="end" font-size="10.5" fill="#6E7890">¥${Math.pow(10,lv)>=1e4?(Math.pow(10,lv)/1e4).toFixed(0)+'万':Math.round(Math.pow(10,lv))}</text>`;
   }
   const dots=pts.map(c=>{const g=state.groups[c.groupIdx];
     return `<circle cx="${X(c.R??0)}" cy="${Y(Math.max(1,c.M))}" r="3.4" fill="${g.color}"
-      opacity="${state.legendOff[g.name]?0.12:0.62}"><title>${c.id}｜${g.name}｜R${c.R}天 F${c.F}笔 ${fmtMoney(c.M)}</title></circle>`}).join('');
+      opacity="${state.legendOff[g.name]?0.12:0.8}"><title>${c.id}｜${g.name}｜R${c.R}天 F${c.F}笔 ${fmtMoney(c.M)}</title></circle>`}).join('');
   $('#scatter').innerHTML=svgEl(W,H)+
-    grid+`<line x1="${L}" y1="${T}" x2="${L}" y2="${H-B}" stroke="#C9C2B2"/>
-    <line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="#C9C2B2"/>${dots}</svg>`;
+    grid+`<line x1="${L}" y1="${T}" x2="${L}" y2="${H-B}" stroke="rgba(201,168,106,.4)"/>
+    <line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="rgba(201,168,106,.4)"/>${dots}</svg>`;
 }
 
 function renderRadar(){
@@ -100,23 +100,23 @@ function renderRadar(){
   let s='';
   for(let ring=1;ring<=4;ring++){
     s+='<polygon points="'+axes.map((_,i)=>pt(ring/4,i,R).join(',')).join(' ')+
-      `" fill="${ring===4?'#FBF8EF':'none'}" stroke="#E6DFCE" stroke-width="1"/>`;
+      `" fill="${ring===4?'rgba(201,168,106,.05)':'none'}" stroke="rgba(255,255,255,.12)" stroke-width="1"/>`;
   }
   axes.forEach((a,i)=>{const[x,y]=pt(1,i,R);
-    s+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#E6DFCE"/>`;
+    s+=`<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(255,255,255,.1)"/>`;
     const[lx,ly]=pt(1.16,i,R);
-    s+=`<text x="${lx}" y="${ly+4}" text-anchor="middle" font-size="11.5" fill="#4A554F">${a}</text>`});
+    s+=`<text x="${lx}" y="${ly+4}" text-anchor="middle" font-size="11.5" fill="#98A1B3">${a}</text>`});
   gs.forEach(g=>{
     const p=axes.map((_,i)=>pt(g.radar[i],i,R).join(',')).join(' ');
-    s+=`<polygon points="${p}" fill="${g.color}" fill-opacity=".1" stroke="${g.color}" stroke-width="2"/>`;
+    s+=`<polygon points="${p}" fill="${g.color}" fill-opacity=".18" stroke="${g.color}" stroke-width="2"/>`;
     g.radar.forEach((v,i)=>{const[x,y]=pt(v,i,R);s+=`<circle cx="${x}" cy="${y}" r="2.8" fill="${g.color}"/>`});
   });
-  s+=`<circle cx="${cx}" cy="${cy}" r="2.6" fill="#1B2420"/></svg>`;
+  s+=`<circle cx="${cx}" cy="${cy}" r="2.6" fill="#0C111D"/></svg>`;
   // 右侧图例+均值
   let info=gs.map((g,i)=>`<g transform="translate(350,${30+i*34})">
     <rect width="10" height="10" rx="2" y="2" fill="${g.color}"/>
-    <text x="17" y="12" font-size="12.5" fill="#1B2420">${g.name}</text>
-    <text x="200" y="12" font-size="11" text-anchor="end" fill="#8A918A">R${g.Ravg.toFixed(0)} · F${g.Favg.toFixed(1)} · ${fmtMoney(g.Mavg)}</text>
+    <text x="17" y="12" font-size="12.5" fill="#ECE6D8">${g.name}</text>
+    <text x="200" y="12" font-size="11" text-anchor="end" fill="#6E7890">R${g.Ravg.toFixed(0)} · F${g.Favg.toFixed(1)} · ${fmtMoney(g.Mavg)}</text>
   </g>`).join('');
   $('#radar').innerHTML=svgEl(W,H)+s+info;
   $('#radar-legend').innerHTML=state.groups.map(g=>
@@ -143,16 +143,16 @@ function renderTrend(){
   const X=i=>L+i*(W-L-R)/5,Y=v=>T+(1-v/maxV)*(H-T-B);
   let s='';
   for(let i=0;i<=4;i++){const v=maxV*i/4,py=Y(v);
-    s+=`<line x1="${L}" y1="${py}" x2="${W-R}" y2="${py}" stroke="#F1EDE2"/>
-      <text x="${L-8}" y="${py+4}" text-anchor="end" font-size="10" fill="#8A918A">${v>=1e4?(v/1e4).toFixed(0)+'万':Math.round(v)}</text>`}
-  months.forEach((m,i)=>{s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="#8A918A">${m.slice(5)}月</text>`});
+    s+=`<line x1="${L}" y1="${py}" x2="${W-R}" y2="${py}" stroke="rgba(255,255,255,.055)"/>
+      <text x="${L-8}" y="${py+4}" text-anchor="end" font-size="10" fill="#6E7890">${v>=1e4?(v/1e4).toFixed(0)+'万':Math.round(v)}</text>`}
+  months.forEach((m,i)=>{s+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="#6E7890">${m.slice(5)}月</text>`});
   gs.forEach((g,gi)=>{
     if(state.legendOff[g.name])return;
     const d=series[gi].map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' ');
     const area=`M${X(0)} ${H-B} L`+series[gi].map((v,i)=>X(i).toFixed(1)+' '+Y(v).toFixed(1)).join(' L ')+` L${X(5)} ${H-B} Z`;
-    s+=`<path d="${area}" fill="${g.color}" fill-opacity=".07"/>
+    s+=`<path d="${area}" fill="${g.color}" fill-opacity=".12"/>
       <path d="${d}" fill="none" stroke="${g.color}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
-    series[gi].forEach((v,i)=>{s+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3" fill="#FFFDF7" stroke="${g.color}" stroke-width="1.8"><title>${months[i]} ${g.name}：${fmtMoney(v)}</title></circle>`});
+    series[gi].forEach((v,i)=>{s+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3" fill="#0C111D" stroke="${g.color}" stroke-width="1.8"><title>${months[i]} ${g.name}：${fmtMoney(v)}</title></circle>`});
   });
   $('#trend').innerHTML=svgEl(W,H)+s+'</svg>';
   $('#trend-legend').innerHTML=gs.map(g=>
@@ -274,11 +274,11 @@ document.addEventListener('click',e=>{
   renderTable();
 });
 $('#tab-km').onclick=()=>switchMode('km');
-$('#tab-rfm').onclick=()=>switchMode('rf');
+$('#tab-rfm').onclick=()=>switchMode('rfm');
 function switchMode(m){
   state.mode=m;state.legendOff={};
   $('#tab-km').classList.toggle('active',m==='km');
-  $('#tab-rfm').classList.toggle('active',m==='rf');
+  $('#tab-rfm').classList.toggle('active',m==='rfm');
   $('#kctl').style.visibility=m==='km'?'visible':'hidden';
   if(m==='km'){$('#krange').value=state.k;$('#kval').textContent=state.k}
   buildGroupsAndRender();
